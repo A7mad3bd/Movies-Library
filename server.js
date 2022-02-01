@@ -1,47 +1,60 @@
-// npm start => start the server 
 'use strict';
-
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
+const PORT = process.env.PORT;
 
-const data = require('./Movie data/data.json');
+const datajson = require('./Movie data/data.json');
 
 
 const server = express();
 server.use(cors());
 
-server.get('/', handelerror ) //http://localhost:3000/
-server.get('/favorite', handelfavorite) //http://localhost:3000/favorite
-server.get('*',handelNotFound);//http://localhost:3000/** 
 
-function Meme(id,name,image,  tags, topText){
-   this.id= id;
-   this.name = name;
-   this.image=image;
-   this.tags = tags;
-   this.topText = topText;
-}
+ server.get('/',handleHomePage);
+ server.get('/favorite', handelfavorite) 
+server.get('*',handelNotFound);
+server.get('*',handelerror);
 
 
-function handelfavorite(req,res){
-    return res.status(200).send("Welcome to Favorite Page");
-}
+
+function Movie (id, title, release_date, vote_average, overview){
+    this.id = id;
+    this.title = title;
+    this.release_date = release_date;
+    this.vote_average = vote_average;
+    this.overview = overview;
+}  
+
+function handleHomePage(request, response) {
+    let Movie1 = new Movie (datajson.id,datajson.title,  datajson.release_date,datajson.vote_average, datajson.overview);
+    
+    return response.status(200).json(Movie1);
+ } 
 
 
 function handelNotFound(req,res){
     res.status(404).send('page not found error :/ ')
  }
- function handelerror(request,response){
+
+
+
+ function handelerror(error,request,response){
     
    return response.status(500).send("Sorry, something went wrong")
    
  }
  
 
-server.listen(3000,()=>{
-    console.log("my server is listining to port 3000");
-})
+ function handelfavorite(req,res){
+    return res.status(200).send("Welcome to Favorite Page");
+}
+ 
 
+server.listen(3000, ()=>{
+    console.log("listinig to port 3000");
+});
 
 
 

@@ -4,14 +4,34 @@
 **Author Name**: Ahmad Abdallah Alkhalili
 
 ## WRRC
-Add an image of your WRRC here
-
+![WRRC](/assets/autodraw.png)
 ## Overview
-
+This website about movies and raiting and searching about it , the wesite gets the data from API and form Json file . 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+Create a repository called Movies-Library on GitHub
+Create a new branch called Task11
+Create basic file structure (server.js, .gitignore, .eslintrc.json )
+Install the required packages for this  npm install express cors
+
+Create a new branch called Task12
+GET request to the 3rd party API
+trending 
+search
+
 
 ## Project Features
-<!-- What are the features included in you app -->
+Home Page contains->
+title
+poster_path
+overview
+super-hero
 
+Favorite Page 
 
+Response ->
+Welcome to Favorite Page
+Handle errors
+Create a function to handle the server error (status 500)
+Create a function to handle "page not found error" (status 404)
+
+Movies-Library structure code ->tree

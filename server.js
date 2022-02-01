@@ -1,18 +1,19 @@
 'use strict';
+const datajson = require('./Movie data/data.json');
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const pg = require('pg');
 
-const datajson = require('./Movie data/data.json');
-
+const client = new pg.Client(process.env.DATABASE_URL);
 
 const PORT = process.env.PORT;
-const APIKEY = process.env.APIKEY;
 
 const server = express();
 server.use(cors());
-
+server.use(express.json()); // whenever you read from the body please parse it to a json format 
 
 server.get('/', handleHomePage);
 server.get('/favorite', handelfavorite)
@@ -20,9 +21,13 @@ server.get('/trending', trendingHandler);
 server.get('/changes', ChangesgHandler);
 server.get('/certification', certificationHandler);
 server.get('/search', searchgHandler);
-server.get('/*', handelNotFound);
-server.get('', handelerror);
 
+ server.post('/addMovie', addMovie);
+server.get('/getMovies', getMovies);
+
+
+server.use('*',notFoundHandler);
+server.use(errorHandler)
 
 function Movie1(id, title, release_date, vote_average, overview) {
     this.id = id;
@@ -32,95 +37,120 @@ function Movie1(id, title, release_date, vote_average, overview) {
     this.overview = overview;
 }
 
+// let userSearch = "The Sahwshank"; // an input from the user 
+let url1 = `https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.APIKEY}&language=en-US`;
+let url2 = `https://api.themoviedb.org/3/movie/changes?api_key=${process.env.APIKEY}&page=1`
+let url3 = `https://api.themoviedb.org/3/certification/movie/list?api_key=${process.env.APIKEY}`
 
-let numberOfMovies = 5;
-let userSearch = "The Shawshank Redemption";
 
-
-let url=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=${userSearch}`;
-let url1=`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.APIKEY}&language=en-US`;
-let url2=`https://api.themoviedb.org/3/movie/changes?api_key=${process.env.APIKEY}&page=1`
-let url3=`https://api.themoviedb.org/3/certification/movie/list?api_key=${process.env.APIKEY}`
-
-function trendingHandler(req, res) {
-    let newArr = [];
-    axios.get(url1).then((result) => {
-            console.log(result);
-            result.data.results.forEach(Movie => {
-                newArr.push(new Movie1(Movie.id, Movie.title, Movie.release_date, Movie.vote_average, Movie.overview));
-            })
-            console.log(newArr);
-            res.status(400).json(newArr);
-
-        }).catch((err) => {
-
-        })
+function handleHomePage(req,res){
+    res.status(200).send("Welcome :) ");
 }
-function searchgHandler(req, res) {
+
+function trendingHandler(req,res){
     let newArr = [];
-   //  userSearch = "The-Shawshank-Redemption";
-    axios.get(url).then((result) => {
-             
-            res.status(200).json(result.data);
+    axios.get(url1)
+     .then((result)=>{
+        result.data.results.forEach(Movie =>{
+            newArr.push(new Movie1(Movie.id, Movie.title, Movie.release_date, Movie.vote_average, Movie.overview));
+    })
+        res.status(200).json(newArr);
 
-        }).catch((err) => {
-
-        })
+    }).catch((err)=>{
+        errorHandler(err,req,res);
+    })
 }
+
+function searchgHandler(req,res){
+    let newArr = [];
+
+    let userSearch = req.query.userSearch;
+    console.log(userSearch);
+
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=${userSearch}`;
+
+    axios.get(url)
+    .then(result=>{
+        let Movies=result.data.results.forEach(Movie => {
+            newArr.push(new Movie1(Movie.id, Movie.title, Movie.release_date, Movie.vote_average, Movie.overview));
+        });
+        res.status(200).json(newArr);  
+     }).catch(err=>{
+        errorHandler(err,req,res);
+    })
+}
+
 
 function ChangesgHandler(req, res) {
     let newArr = [];
     axios.get(url2).then((result) => {
-             
-            res.status(200).json(result.data);
 
-        }).catch((err) => {
+        res.status(200).json(result.data);
 
-        })
+    }).catch((err) => {
+        errorHandler(err,req,res);
+    })
 }
 
 
 function certificationHandler(req, res) {
     let newArr = [];
     axios.get(url3).then((result) => {
-             
-            res.status(200).json(result.data);
 
-        }).catch((err) => {
+        res.status(200).json(result.data);
 
-        })
+    }).catch((err) => {
+
+    })
 }
+
+
+function addMovie(req,res){
+  const mov = req.body;
+//   console.log(mov)
+let sql = `INSERT INTO MyFavMovietable((id, title, release_date, vote_average, overview) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
+let values=[Movie1.id,Movie1.title,Movie1.release_date,Movie1.vote_average,Movie1.overview];
+client.query(sql,values).then(data =>{
+      res.status(200).json(data.rows);
+  }).catch(error=>{
+      errorHandler(error,req,res)
+  });
+}
+
+
+function getMovies(req,res){
+    let sql = `SELECT * FROM MyFavMovietable;`;
+    client.query(sql).then(data=>{
+       res.status(200).json(data.rows);
+    }).catch(error=>{
+        errorHandler(error,req,res)
+    });
+}
+
+
+
 
 function handelfavorite(req, res) {
     return res.status(200).send("Welcome to Favorite Page");
 }
 
-function handleHomePage(request, response) {
-    let Movie12 = new Movie1 (datajson.id,datajson.title,  datajson.release_date,datajson.vote_average, datajson.overview);
-    
-    return response.status(200).json(Movie12);
- } 
 
+function notFoundHandler(req,res){
+   res.status(404).send("This page is not found")
+}
 
-
-function handelNotFound(req, res) {
-    res.status(404).send('page not found error :/ ')
+function errorHandler (error,req,res){
+   const err = {
+        status : 500,
+        messgae : error
+    }
+    res.status(500).send(err);
 }
 
 
-function handelerror(error, request, response) {
-
-    return response.status(500).send("Sorry, something went wrong")
-
-}
-
-
-
-server.listen(PORT, () => {
-    console.log(`listining to port ${PORT}`)
-   
+client.connect().then(()=>{
+    server.listen(PORT,()=>{
+        console.log(`listining to port ${PORT}`)
+    })
 })
-
-
-
 

@@ -8,7 +8,14 @@ const axios = require('axios');
 const pg = require('pg');
 // DATABASE_URL=postgres://username:password@localhost:5432/databaseName
 
-const client = new pg.Client(process.env.DATABASE_URL);
+//const client = new pg.Client(process.env.DATABASE_URL);
+
+const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+})
+
+
 
 const PORT = process.env.PORT;
 const APIKEY = process.env.APIKEY;
@@ -202,3 +209,4 @@ client.connect().then(() => {
         console.log(`listining to port ${PORT}`)
     })
 })
+

@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const pg = require('pg');
+// DATABASE_URL=postgres://username:password@localhost:5432/databaseName
 
 const client = new pg.Client(process.env.DATABASE_URL);
 
@@ -107,9 +108,8 @@ function certificationHandler(req, res) {
 
 function addMovie(req,res){
   const mov = req.body;
-//   console.log(mov)
-let sql = `INSERT INTO MyFavMovietable((id, title, release_date, vote_average, overview) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
-let values=[Movie1.id,Movie1.title,Movie1.release_date,Movie1.vote_average,Movie1.overview];
+let sql = `INSERT INTO myfavmovietable( title, release_date, vote_average, overview) VALUES ($1,$2,$3,$4) RETURNING *;`
+let values=[mov.title,mov.release_date,mov.vote_average,mov.overview];
 client.query(sql,values).then(data =>{
       res.status(200).json(data.rows);
   }).catch(error=>{
@@ -119,7 +119,7 @@ client.query(sql,values).then(data =>{
 
 
 function getMovies(req,res){
-    let sql = `SELECT * FROM MyFavMovietable;`;
+    let sql = `SELECT * FROM myfavmovietable;`;
     client.query(sql).then(data=>{
        res.status(200).json(data.rows);
     }).catch(error=>{

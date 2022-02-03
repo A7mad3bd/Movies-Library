@@ -157,8 +157,6 @@ function getMovies(req, res) {
 
 
 
-
-
 function updateMovsHandler(req, res) {
     const id = req.params.id;
     const Movs = req.body;

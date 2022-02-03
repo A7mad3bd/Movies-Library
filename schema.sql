@@ -11,3 +11,4 @@ vote_average VARCHAR(255),
 overview VARCHAR(255)
 
 );
+

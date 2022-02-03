@@ -12,6 +12,7 @@
 ## Overview
 This website about movies and raiting and searching about it , the wesite gets the data from API and form Json file . 
 
+
 ## Getting Started
 Create a repository called Movies-Library on GitHub
 Create a new branch called Task11
@@ -22,7 +23,13 @@ Create a new branch called Task12
 GET request to the 3rd party API
 trending 
 search
-
+changes-API
+certification-API
+addMovie Post an entry in your database
+getMovies GET an entry in your database
+UPDATE PUT an entry in your database
+DELETE DELETE an entry in your database
+getMovie GET an entry in your database
 
 
 ## Project Features

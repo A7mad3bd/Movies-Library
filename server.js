@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const pg = require('pg');
+// DATABASE_URL=postgres://username:password@localhost:5432/databaseName
 
 const client = new pg.Client(process.env.DATABASE_URL);
 
@@ -13,7 +14,7 @@ const PORT = process.env.PORT;
 
 const server = express();
 server.use(cors());
-server.use(express.json()); 
+server.use(express.json()); // whenever you read from the body please parse it to a json format 
 
 server.get('/', handleHomePage);
 server.get('/favorite', handelfavorite)

@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const pg = require('pg');
+// DATABASE_URL=postgres://username:password@localhost:5432/databaseName
 
 const client = new pg.Client(process.env.DATABASE_URL);
 

@@ -1,10 +1,14 @@
 # Movies-Library
 # Project Name: movies-library  - Project Version :1.0.0
+![DB & Table](/assets/1.bmp)
+![Search dynamic query postman](/assets/2.bmp)
+![addMovies POST postman](/assets/3.bmp)
+![getMovies GET postman](/assets/4.bmp)
 
 **Author Name**: Ahmad Abdallah Alkhalili
 
 ## WRRC
-![WRRC](/assets/autodraw.png)
+![WRRC](/assets/5.bmp)
 ## Overview
 This website about movies and raiting and searching about it , the wesite gets the data from API and form Json file . 
 

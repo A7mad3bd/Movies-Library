@@ -15,8 +15,7 @@ server.use(cors());
  server.get('/',handleHomePage);
  server.get('/favorite', handelfavorite) 
 server.get('*',handelNotFound);
-server.get('*',handelerror);
-
+server.get(errorHandler);
 
 
 function Movie (id, title, release_date, vote_average, overview){
@@ -40,11 +39,15 @@ function handelNotFound(req,res){
 
 
 
- function handelerror(error,request,response){
-    
-   return response.status(500).send("Sorry, something went wrong")
-   
- }
+ function errorHandler(error, req, res) {
+    const err = {
+        status: 500,
+        messgae: error
+    }
+    res.status(500).send(err);
+}
+
+
  
 
  function handelfavorite(req,res){

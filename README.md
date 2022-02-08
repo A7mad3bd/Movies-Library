@@ -1,12 +1,18 @@
 # Movies-Library
 # Project Name: movies-library  - Project Version :1.0.0
+![DB & Table](/assets/1.bmp)
+![Search dynamic query postman](/assets/2.bmp)
+![addMovies POST postman](/assets/3.bmp)
+![getMovies GET postman](/assets/4.bmp)
 
 **Author Name**: Ahmad Abdallah Alkhalili
 
 ## WRRC
-![WRRC](/assets/autodraw.png)
+![WRRC](/assets/5.bmp)
 ## Overview
 This website about movies and raiting and searching about it , the wesite gets the data from API and form Json file . 
+
+
 ## Getting Started
 Create a repository called Movies-Library on GitHub
 Create a new branch called Task11
@@ -17,6 +23,13 @@ Create a new branch called Task12
 GET request to the 3rd party API
 trending 
 search
+changes-API
+certification-API
+addMovie Post an entry in your database
+getMovies GET an entry in your database
+UPDATE PUT an entry in your database
+DELETE DELETE an entry in your database
+getMovie GET an entry in your database
 
 
 ## Project Features
